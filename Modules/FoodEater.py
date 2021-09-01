@@ -1,46 +1,84 @@
-from Engine.GUI import *
+import time
+
+from Conf.Hotkeys import Hotkey
+
+from Core.GUI import *
+from Core.GUISetter import GUISetter
+from Core.ThreadManager import ThreadManager
+
+GUIChanges = []
 
 EnabledFoodEater = False
-
+ThreadStarted = False
 
 class FoodEater:
-    def __init__(self, root):
+    def __init__(self, root, MOUSE_OPTION):
         self.FoodEater = GUI('FoodEater', 'Module: Food Eater')
-        self.FoodEater.DefaultWindow('DefaultWindow')
+        self.FoodEater.DefaultWindow('AutoHeal2', [306, 372], [1.2, 2.29])
+        self.Setter = GUISetter("FoodEaterLoader")
+        self.SendToClient = Hotkey(MOUSE_OPTION)
+        self.ThreadManager = ThreadManager("ThreadFoodEater")
+
+        HotkeyFoodEater, InitiatedHotkeyFoodEater = self.Setter.Variables.Str('HotkeyFoodEater')
 
         def SetFoodEater():
             global EnabledFoodEater
             if not EnabledFoodEater:
                 EnabledFoodEater = True
                 ButtonEnabled.configure(text='FoodEater: ON')
-                ScanFoodEater()
+                Checking()
+                if not ThreadStarted:
+                    self.ThreadManager.NewThread(ScanFoodEater)
+                else:
+                    self.ThreadManager.UnPauseThread()
             else:
                 EnabledFoodEater = False
                 ButtonEnabled.configure(text='FoodEater: OFF')
+                Checking()
+                self.ThreadManager.PauseThread()
+
 
         def ScanFoodEater():
+            while EnabledFoodEater:
+                self.SendToClient.Press(HotkeyFoodEater.get())
+                print("Pressed ", HotkeyFoodEater.get(), " To Eat Food")
+                time.sleep(60)
+
+        def Checking():
+            HotkeyOption = self.FoodEater.addOption(HotkeyFoodEater, self.SendToClient.Hotkeys, [145, 170], 10)
             if EnabledFoodEater:
-                print("Try Lock FoodEater")
-                print("Try This")
+                HotkeyOption.configure(state='disabled')
+            else:
+                HotkeyOption.configure(state='normal')
 
-            root.after(300, ScanFoodEater)
+        def CheckingGUI(Init, Get, Name):
+            if Get != Init:
+                GUIChanges.append((Name, Get))
 
-        CheckPrint = tk.BooleanVar()
-        LowMana = tk.BooleanVar()
+        def Destroy():
+            CheckingGUI(InitiatedHotkeyFoodEater, HotkeyFoodEater.get(), 'HotkeyFoodEater')
 
-        self.FoodEater.addButton('Ok', self.FoodEater.destroyWindow, [84, 29, 130, 504], [127, 17, 8], [123, 13, 5])
+            self.FoodEater.destroyWindow();
+
+        # CheckPrint = tk.BooleanVar()
+        # LowMana = tk.BooleanVar()
+
+        self.FoodEater.addButton('Ok', Destroy, [84, 29, 130, 504], [5, 50, 8])
 
         global EnabledFoodEater
         if not EnabledFoodEater:
             ButtonEnabled = self.FoodEater.addButton('FoodEater: OFF', SetFoodEater, [328, 29, 12, 469],
-                                                       [127, 17, 8], [123, 13, 5])
+                                                       [5, 17, 8])
         else:
             ButtonEnabled = self.FoodEater.addButton('FoodEater: ON', SetFoodEater, [328, 29, 12, 469],
-                                                       [127, 17, 8], [123, 13, 5])
+                                                       [5, 17, 8])
 
-        ButtonPrint = self.FoodEater.addCheck(CheckPrint, [10, 408], [120, 98, 51], 0, "Print on Tibia's screen")
+        # ButtonPrint = self.FoodEater.addCheck(CheckPrint, [10, 408], [120, 98, 51], 0, "Print on Tibia's screen")
 
-        ButtonLowMana = self.FoodEater.addCheck(LowMana, [10, 440], [120, 98, 51], 0, "Low Mana Warnings")
+        # ButtonLowMana = self.FoodEater.addCheck(LowMana, [10, 440], [120, 98, 51], 0, "Low Mana Warnings")
 
+        Checking()
+
+        self.FoodEater.Protocol(Destroy)
         self.FoodEater.loop()
 

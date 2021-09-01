@@ -27,7 +27,7 @@
             "ManaCheckStageOne": true,
             "ManaCheckStageTwo": false,
             "ManaPercentageStageOne": 70,
-            "ManaHotkeyStageOne": "F3",
+            "ManaHotkeyStageOne": "F2",
             "ManaPercentageStageTwo": 45,
             "ManaHotkeyStageTwo": "Shift + F12",
             "CheckLowMana": false
@@ -35,7 +35,7 @@
         "HurLoader": {
             "CheckPrint": false,
             "CheckBuff": false,
-            "HotkeyHur": "F6",
+            "HotkeyHur": "F10",
             "CheckLowMana": false,
             "CheckStageOne": true
         },
@@ -103,6 +103,12 @@
             "LoadSortLoot": true,
             "WalkForDebug": true,
             "CapBelowThan": "150"
+        },
+        "FoodEaterLoader": {
+            "HotkeyFoodEater": "Shift + F12"
+        },
+        "HealerFriendLoader": {
+            "HotkeyHealerFriend": "F3"
         }
     }
 }

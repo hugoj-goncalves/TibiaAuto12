@@ -112,6 +112,7 @@ def TakeImage(Region=None):
         try:
             TakedImage = Hooker().HookWindow()
             if Region is not None:
+                # print('Box: ', Region[0], Region[1], Region[0] + (Region[2] - Region[0]), Region[1] + (Region[3] - Region[1]))
                 TakedImage = TakedImage.crop(
                     (Region[0], Region[1], Region[0] + (Region[2] - Region[0]), Region[1] + (Region[3] - Region[1])))
                 return TakedImage
@@ -161,7 +162,7 @@ def LocateImage(image, Region=None, Precision=0.8):
 '''
 
 
-def LocateCenterImage(image, Region=None, Precision=0.8):
+def LocateCenterImage(image, Region=None, Precision=0.8, LeftHandle=False):
     TakedImage = TakeImage(Region)
 
     img_rgb = np.array(TakedImage)
@@ -173,6 +174,8 @@ def LocateCenterImage(image, Region=None, Precision=0.8):
     if LocatedPrecision > Precision:
         needleWidth, needleHeight = GetImageSize(image)
         if needleWidth:
+            if LeftHandle:
+                return Position[0], Position[1] + int(needleHeight / 2)
             return Position[0] + int(needleWidth / 2), Position[1] + int(needleHeight / 2)
         else:
             print('Debugged From LocateCenterImage')
@@ -238,6 +241,11 @@ def PixelMatchesColor(X, Y, expectedRGBColor):
         return True
     else:
         return False
+
+def GetPixelColor(X, Y):
+    TakedImage = TakeImage(Region=(X, Y, X + 1, Y + 1))
+    rgb = TakedImage.getpixel((0, 0))
+    return rgb
 
 
 '''

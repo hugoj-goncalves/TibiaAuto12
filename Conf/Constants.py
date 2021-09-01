@@ -12,6 +12,13 @@ LifeColor = [219, 79, 79]
 ManaColorFull = [45, 45, 105]
 ManaColor = [83, 80, 218]
 
+LifeColorRedBattle = [192, 48, 48]
+LifeColorRedBattle2 = [192, 0, 0]
+LifeColorYellowBattle = [192, 192, 0]
+LifeColorGreenBattle = [0, 192, 0]
+LifeColorGreenBattle2 = [96, 192, 96]
+LifeColorEmptyBattle = [68, 68, 68]
+
 # region Items
 
 ItemsPath = MainPath + "/Items/"

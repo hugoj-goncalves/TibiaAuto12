@@ -19,10 +19,10 @@ from Modules.AutoSSA import AutoSSA
 from Modules.CaveBot import CaveBot
 # from Modules.ColorChange import ColorChange
 # from Modules.CreatureInfo import CreatureInfo
-# from Modules.FoodEater import FoodEater
+from Modules.FoodEater import FoodEater
 # from Modules.FPSChanger import FPSChanger
 # from Modules.GeneralOptions import GeneralOptions
-# from Modules.HealerFriend import HealerFriend
+from Modules.HealerFriend import HealerFriend
 # from Modules.LoadConfig import LoadConfig
 # from Modules.Modules import Modules
 # from Modules.Monsters import Monsters
@@ -291,8 +291,7 @@ def OpenCreatureInfo():
 
 
 def OpenFoodEater():
-    print("FoodEater In Development...")
-    # FoodEater(root)
+    FoodEater(root, MOUSE_OPTION)
 
 
 def OpenFPSChanger():
@@ -306,8 +305,7 @@ def OpenGeneralOptions():
 
 
 def OpenHealerFriend():
-    print("HealerFriend In Development...")
-    # HealerFriend(root)
+    HealerFriend(root, MOUSE_OPTION, BattlePositions)
 
 
 def OpenLoadConfig():
