@@ -7,6 +7,7 @@ from random import randint
 from Conf.WindowTitles import *
 from Core.GUI import *
 from Core.GetHWND import GetHWND
+from Core.ThreadManager import AllThreads
 from Modules.ChooseConfig import ChooseConfig
 
 from Modules.Root import root
@@ -105,6 +106,7 @@ def WindowSelectCharacter():
     def exiting():
         print("Exiting...")
         try:
+            AllThreads().PauseThreads()
             SelectCharacter.destroy()
         except Exception as Ex:
             print(Ex)

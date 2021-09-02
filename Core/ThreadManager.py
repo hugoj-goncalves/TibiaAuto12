@@ -32,6 +32,20 @@ Event = Event()
     #
 '''
 
+class AllThreads:
+    def __init__(self):
+        pass
+
+    def PauseThreads(self):
+        for i in range(len(ActivatedThreads)):
+            print('Pausing: ', ActivatedThreads[i][0])
+            ActivatedThreads[i][0].PauseOn()
+
+    def UnPauseThreads(self):
+        for i in range(len(ActivatedThreads)):
+            print('Pausing: ', ActivatedThreads[i][0])
+            ActivatedThreads[i][0].PauseOff()
+
 
 class ThreadManager:
     def __init__(self, Name):
@@ -74,6 +88,7 @@ class ThreadManager:
 
     # This Function Is Not Ready To Use !!!
     def KillThread(self):
+        print('Killing Thread: ', self.Name, ActivatedThreads)
         for i in range(len(ActivatedThreads)):
             if ActivatedThreads[i][1] == self.Name:
                 ActivatedThreads.remove(ActivatedThreads[i])
@@ -98,15 +113,18 @@ class ThreadManager:
 
         def run(self):
             # Event.wait()
-            while not self.Queue.empty():
-                SelectedThread = self.Queue.get()
-                # print(self.Name, "Pipeline To Handle:",SelectedThread)
-                if SelectedThread == 'Kill':
-                    self.Queue.put(SelectedThread)
-                    self._stoped = True
-                    # self.Queue.pop(-1)
-                    break
-                self._target(SelectedThread)
+            try:
+                while not self.Queue.empty():
+                    SelectedThread = self.Queue.get()
+                    # print(self.Name, "Pipeline To Handle:",SelectedThread)
+                    if SelectedThread == 'Kill':
+                        self.Queue.put(SelectedThread)
+                        self._stoped = True
+                        # self.Queue.pop(-1)
+                        break
+                    self._target(SelectedThread)
+            finally:
+                print('Thread ended: ', self.Name)
 
         def PauseOn(self):
             self._stoped = False

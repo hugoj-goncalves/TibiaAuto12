@@ -1,6 +1,7 @@
 import json
 
 from Core.GUI import *
+from Core.ThreadManager import AllThreads
 
 # from Modules.AdjustConfig import AdjustConfig
 # from Modules.AmmoRestack import AmmoRestack
@@ -104,6 +105,7 @@ class root:
 
         def Exit():
             print("Exiting...")
+            AllThreads().PauseThreads()
             self.root.destroyWindow()
 
         self.root.addButton('Exit', Exit, [92, 23], [10, 498])
