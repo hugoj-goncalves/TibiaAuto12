@@ -41,7 +41,7 @@ class FoodEater:
 
 
         def ScanFoodEater():
-            if EnabledFoodEater:
+            while EnabledFoodEater:
                 self.SendToClient.Press(HotkeyFoodEater.get())
                 print("Pressed ", HotkeyFoodEater.get(), " To Eat Food")
                 time.sleep(10)
