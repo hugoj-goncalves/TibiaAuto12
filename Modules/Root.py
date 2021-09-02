@@ -47,6 +47,7 @@ RingPositions = [0, 0, 0, 0]
 StatsPositions = [0, 0, 0, 0]
 HealthLocation = [0, 0]
 BattlePositions = [0, 0, 0, 0]
+PlayersBattlePositions = [0, 0, 0, 0]
 AmuletPositions = [0, 0, 0, 0]
 SQMs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 MainPath = None
@@ -140,6 +141,11 @@ class root:
                     BattlePositions[1] = data['Boxes']['BattleBox'][0]['y'] - 3
                     BattlePositions[2] = data['Boxes']['BattleBox'][0]['w'] + 3
                     BattlePositions[3] = data['Boxes']['BattleBox'][0]['h'] + 3
+                if data['Boxes']['PlayersBattleBox'][0]['Stats']:
+                    PlayersBattlePositions[0] = data['Boxes']['PlayersBattleBox'][0]['x'] - 3
+                    PlayersBattlePositions[1] = data['Boxes']['PlayersBattleBox'][0]['y'] - 3
+                    PlayersBattlePositions[2] = data['Boxes']['PlayersBattleBox'][0]['w'] + 3
+                    PlayersBattlePositions[3] = data['Boxes']['PlayersBattleBox'][0]['h'] + 3
                 if data['Boxes']['StatusBarBox'][0]['Stats']:
                     StatsPositions[0] = data['Boxes']['StatusBarBox'][0]['x'] - 1
                     StatsPositions[1] = data['Boxes']['StatusBarBox'][0]['y'] - 1
@@ -305,7 +311,7 @@ def OpenGeneralOptions():
 
 
 def OpenHealerFriend():
-    HealerFriend(root, MOUSE_OPTION, BattlePositions)
+    HealerFriend(root, MOUSE_OPTION, PlayersBattlePositions)
 
 
 def OpenLoadConfig():
