@@ -29,11 +29,13 @@ class HealerFriend:
 
         def SetHealerFriend():
             global EnabledHealerFriend
+            global ThreadStarted
             if not EnabledHealerFriend:
                 EnabledHealerFriend = True
                 ButtonEnabled.configure(text='HealerFriend: ON')
                 Checking()
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanHealerFriend)
                 else:
                     self.ThreadManager.UnPauseThread()
@@ -77,6 +79,7 @@ class HealerFriend:
                             print("Pressed ", HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
                             self.SendToClient.Press(HotkeyHealerFriend.get())
                             time.sleep(1)
+                            continue
                 time.sleep(.2)
 
         def Checking():

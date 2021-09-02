@@ -9,12 +9,10 @@ from Core.ThreadManager import ThreadManager
 
 from Engine.ScanHur import ScanHur
 
-EnabledAutoHur = False
-
-ThreadStarted = False
-
 GUIChanges = []
 
+EnabledAutoHur = False
+ThreadStarted = False
 
 class AutoHur:
     def __init__(self, StatsPositions, MOUSE_OPTION):
@@ -26,12 +24,14 @@ class AutoHur:
 
         def SetAutoHur():
             global EnabledAutoHur
+            global ThreadStarted
             if not EnabledAutoHur:
                 EnabledAutoHur = True
                 ButtonEnabled.configure(text='AutoHur: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
                 print("AutoHur: ON")
                 CheckingButtons()
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanAutoHur)
                 else:
                     self.ThreadManager.UnPauseThread()

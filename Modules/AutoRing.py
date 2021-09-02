@@ -35,6 +35,7 @@ class AutoRing:
 
         def SetAutoRing():
             global EnabledAutoRing
+            global ThreadStarted
             if not EnabledAutoRing:
                 EnabledAutoRing = True
                 ButtonEnabled.configure(text='AutoRing: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
@@ -45,6 +46,7 @@ class AutoRing:
                 CheckingButtons()
                 time.sleep(0.03)
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanAutoRing)
                 else:
                     self.ThreadManager.UnPauseThread()

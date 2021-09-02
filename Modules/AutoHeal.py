@@ -10,14 +10,12 @@ from Core.ThreadManager import ThreadManager
 
 from Engine.ScanStages import ScanStages
 
+GUIChanges = []
 
 EnabledAutoHeal = False
 ThreadStarted = False
 
-GUIChanges = []
-
 Life = 0
-
 
 class AutoHeal:
     def __init__(self, HealthLocation, MOUSE_OPTION):
@@ -30,12 +28,14 @@ class AutoHeal:
 
         def SetAutoHeal():
             global EnabledAutoHeal
+            global ThreadStarted
             if not EnabledAutoHeal:
                 EnabledAutoHeal = True
                 ButtonEnabled.configure(text='AutoHealing: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
                 print("AutoHealing: ON")
                 CheckingButtons()
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(scanning_auto_life)
                 else:
                     self.ThreadManager.UnPauseThread()

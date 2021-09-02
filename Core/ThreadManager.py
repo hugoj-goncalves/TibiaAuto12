@@ -53,18 +53,23 @@ class ThreadManager:
 
         TheThread.start()
         ActivatedThreads.append((TheThread, str(self.Name)))
+        print('ActivatedThreads: ', ActivatedThreads)
 
     # Pause The All Threads Created From Manager Object
     def PauseThread(self):
+        print('Pause - ActivatedThreads: ', ActivatedThreads)
         for i in range(len(ActivatedThreads)):
             if ActivatedThreads[i][1] == self.Name:
+                print('Pausing: ', ActivatedThreads[i][0])
                 ActivatedThreads[i][0].PauseOn()
         # print(self.Queue.queue)
 
     # UnPause The All Threads Created From Manager Object
     def UnPauseThread(self):
+        print('UnPause - ActivatedThreads: ', ActivatedThreads)
         for i in range(len(ActivatedThreads)):
             if ActivatedThreads[i][1] == self.Name:
+                print('UnPausing: ', ActivatedThreads[i][0])
                 ActivatedThreads[i][0].PauseOff()
 
     # This Function Is Not Ready To Use !!!

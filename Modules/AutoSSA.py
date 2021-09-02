@@ -35,6 +35,7 @@ class AutoSSA:
 
         def SetAutoAmulet():
             global EnabledAutoSSA
+            global ThreadStarted
             if not EnabledAutoSSA:
                 EnabledAutoSSA = True
                 ButtonEnabled.configure(text='AutoSSA: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
@@ -45,6 +46,7 @@ class AutoSSA:
                 CheckingButtons()
                 time.sleep(0.03)
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanAutoAmulet)
                 else:
                     self.ThreadManager.UnPauseThread()

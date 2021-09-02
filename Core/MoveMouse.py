@@ -1,3 +1,4 @@
+import time
 import json
 import ctypes
 import ctypes.wintypes
@@ -43,10 +44,13 @@ class MoveMouse:
         self.DLL.keybd_event(KeyToHex.get(Key, ""), 0, self.KEYEVENTF_KEYUP, 0)
 
     def PressHotkey(self, Option, Key):
-        self.DLL.keybd_event(KeyToHex.get(Option, ""), 0, self.KEYEVENTF_KEYDOWN, 0)
-        self.DLL.keybd_event(KeyToHex.get(Key, ""), 0, self.KEYEVENTF_KEYDOWN, 0)
-        self.DLL.keybd_event(KeyToHex.get(Key, ""), 0, self.KEYEVENTF_KEYUP, 0)
-        self.DLL.keybd_event(KeyToHex.get(Option, ""), 0, self.KEYEVENTF_KEYUP, 0)
+        hexKey = KeyToHex.get(Key, "")
+        hexOption = KeyToHex.get(Option, "")
+        self.DLL.keybd_event(hexOption, 0, self.KEYEVENTF_KEYDOWN, 0)
+        time.sleep(.01)
+        self.DLL.keybd_event(hexKey, 0, self.KEYEVENTF_KEYDOWN, 0)
+        self.DLL.keybd_event(hexKey, 0, self.KEYEVENTF_KEYUP, 0)
+        self.DLL.keybd_event(hexOption, 0, self.KEYEVENTF_KEYUP, 0)
 
     def LeftClick(self, Position):
         self.DLL.SetCursorPos(Position[0], Position[1] + 24)

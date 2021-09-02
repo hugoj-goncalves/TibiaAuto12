@@ -19,7 +19,6 @@ EnabledCaveBot = False
 ThreadStarted = False
 LoadedScript = False
 
-
 class CaveBot:
     def __init__(self, MapPositions, BattlePositions, SQMs, MOUSE_OPTION):
         self.CaveBot = GUI('CaveBot', 'Module: Cave Bot')
@@ -29,11 +28,13 @@ class CaveBot:
 
         def SetCaveBot():
             global EnabledCaveBot
+            global ThreadStarted
             if not EnabledCaveBot:
                 EnabledCaveBot = True
                 ButtonEnabled.configure(text='CaveBot: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
                 CheckingButtons()
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanCaveBot)
                     self.ThreadManager.NewThread(ScanForPause)
                 else:

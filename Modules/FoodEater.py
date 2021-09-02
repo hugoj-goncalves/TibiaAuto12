@@ -23,11 +23,13 @@ class FoodEater:
 
         def SetFoodEater():
             global EnabledFoodEater
+            global ThreadStarted
             if not EnabledFoodEater:
                 EnabledFoodEater = True
                 ButtonEnabled.configure(text='FoodEater: ON')
                 Checking()
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanFoodEater)
                 else:
                     self.ThreadManager.UnPauseThread()
@@ -42,7 +44,7 @@ class FoodEater:
             while EnabledFoodEater:
                 self.SendToClient.Press(HotkeyFoodEater.get())
                 print("Pressed ", HotkeyFoodEater.get(), " To Eat Food")
-                time.sleep(60)
+                time.sleep(10)
 
         def Checking():
             HotkeyOption = self.FoodEater.addOption(HotkeyFoodEater, self.SendToClient.Hotkeys, [145, 170], 10)
@@ -56,9 +58,10 @@ class FoodEater:
                 GUIChanges.append((Name, Get))
 
         def Destroy():
+            print('FoodEater Destroy called!')
             CheckingGUI(InitiatedHotkeyFoodEater, HotkeyFoodEater.get(), 'HotkeyFoodEater')
 
-            self.FoodEater.destroyWindow();
+            self.FoodEater.destroyWindow()
 
         # CheckPrint = tk.BooleanVar()
         # LowMana = tk.BooleanVar()

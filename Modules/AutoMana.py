@@ -10,11 +10,10 @@ from Core.ThreadManager import ThreadManager
 
 from Engine.ScanStages import ScanStages
 
-EnabledAutoMana = False
-ThreadStarted = False
-
 GUIChanges = []
 
+EnabledAutoMana = False
+ThreadStarted = False
 
 class AutoMana:
     def __init__(self, ManaLocation, MOUSE_OPTION):
@@ -27,12 +26,14 @@ class AutoMana:
 
         def SetAutoMana():
             global EnabledAutoMana
+            global ThreadStarted
             if not EnabledAutoMana:
                 ButtonEnabled.configure(text='AutoMana: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
                 print("AutoMana: ON")
                 EnabledAutoMana = True
                 CheckingButtons()
                 if not ThreadStarted:
+                    ThreadStarted = True
                     self.ThreadManager.NewThread(ScanAutoMana)
                 else:
                     self.ThreadManager.UnPauseThread()

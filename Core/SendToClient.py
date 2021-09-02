@@ -1,3 +1,4 @@
+import time
 import win32gui
 import win32api
 import win32con
@@ -67,6 +68,7 @@ class SendToClient:
     '''
 
     def Press(self, Key):
+        print('sending key: ', Key)
         win32api.SendMessage(self.hwnd, win32con.WM_KEYDOWN, KeyToHex.get(Key, ""), 0)
         win32api.SendMessage(self.hwnd, win32con.WM_KEYUP, KeyToHex.get(Key, ""), 0)
 
@@ -80,10 +82,13 @@ class SendToClient:
     '''
 
     def PressHotkey(self, Option,  Key):
-        win32api.keybd_event(KeyToHex.get(Option, ""), 0, 0, 0)
-        win32api.SendMessage(self.hwnd, win32con.WM_KEYDOWN, KeyToHex.get(Key, ""), 0)
-        win32api.SendMessage(self.hwnd, win32con.WM_KEYUP, KeyToHex.get(Key, ""), 0)
-        win32api.keybd_event(KeyToHex.get(Option, ""), 0, win32con.KEYEVENTF_KEYUP, 0)
+        hexKey = KeyToHex.get(Key, "")
+        hexOption = KeyToHex.get(Option, "")
+        win32api.keybd_event(hexOption, 0, 0, 0)
+        time.sleep(.01)
+        win32api.SendMessage(self.hwnd, win32con.WM_KEYDOWN, hexKey, 0)
+        win32api.SendMessage(self.hwnd, win32con.WM_KEYUP, hexKey, 0)
+        win32api.keybd_event(hexOption, 0, win32con.KEYEVENTF_KEYUP, 0)
 
     '''
         Here He Send One Mouse Click At One Position Received From Arg
