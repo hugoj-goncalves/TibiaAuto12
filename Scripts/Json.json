@@ -31,6 +31,13 @@
                 "Stats": false
             }
         ],
+        "PlayersBattlePosition": [
+            {
+                "x": 0,
+                "y": 0,
+                "Stats": false
+            }
+        ],
         "PlayerPosition": [
             {
                 "x": 0,
@@ -50,6 +57,15 @@
             }
         ],
         "BattleBox": [
+            {
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0,
+                "Stats": false
+            }
+        ],
+        "PlayersBattleBox": [
             {
                 "x": 0,
                 "y": 0,

@@ -45,8 +45,8 @@
             "RadioButton": 0,
             "NameAmulet": "StoneSkinAmulet",
             "HotkeyAmulet": "Shift + F2",
-            "TextEntryX": "0",
-            "TextEntryY": "0",
+            "TextEntryX": "3730",
+            "TextEntryY": "899",
             "LifeBellowThan": false,
             "BellowThan": 30,
             "CheckStageOne": true

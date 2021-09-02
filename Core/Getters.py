@@ -1,6 +1,7 @@
 from Core.HookWindow import LocateCenterImage, LocateImage
 
 BattlePositions = [0, 0, 0, 0]
+PlayersBattlePositions = [0, 0, 0, 0]
 MapPositions = [0, 0, 0, 0]
 StatsPositions = [0, 0, 0, 0]
 GameWindow = [0, 0, 0, 0]
@@ -29,6 +30,20 @@ def GetBattlePosition():
 
         return int(BattlePositions[0] + 8), int(BattlePositions[1]), int(BattlePositions[2]), int(
             BattlePositions[3])
+
+
+def GetPlayersBattlePosition():
+    PlayersBattlePositions[0], PlayersBattlePositions[1] = LocateCenterImage('images/TibiaSettings/PlayersBattleList.png', Precision=0.85)
+    if PlayersBattlePositions[0] == 0 and PlayersBattlePositions[1] == 0:
+        return 0, 0, 0, 0
+    else:
+        PlayersBattlePositions[0], PlayersBattlePositions[1] = LocateImage('images/TibiaSettings/PlayersBattleList.png',
+                                                             Precision=0.85)
+        PlayersBattlePositions[2] = PlayersBattlePositions[0] + 155
+        PlayersBattlePositions[3] = PlayersBattlePositions[1] + 415
+
+        return int(PlayersBattlePositions[0] + 8), int(PlayersBattlePositions[1]), int(PlayersBattlePositions[2]), int(
+            PlayersBattlePositions[3])
 
 
 def GetHealthPosition():

@@ -72,11 +72,11 @@ class HealerFriend:
                         Life = 0
 
                     # print('Life: ', Life)
-
-                    if Life < 70:
-                        print("Pressed ", HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
-                        self.SendToClient.Press(HotkeyHealerFriend.get())
-                        time.sleep(1)
+                    if Life > 0:
+                        if Life < 70:
+                            print("Pressed ", HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
+                            self.SendToClient.Press(HotkeyHealerFriend.get())
+                            time.sleep(1)
                 time.sleep(.2)
 
         def Checking():

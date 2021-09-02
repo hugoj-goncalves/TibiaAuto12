@@ -1,0 +1,179 @@
+{
+    "Stats": true,
+    "MouseOption": 0,
+    "ItemsMode": "Frames",
+    "Paths": {
+        "MainPath": "images",
+        "ItemsPath": "images/Items/Frames/",
+        "ChestsPath": "images/Depot/Chests/",
+        "ContainersNamePath": "images/Items/ContainersName/",
+        "CavebotScriptsPath": "Scripts/"
+    },
+    "Positions": {
+        "LifePosition": [
+            {
+                "x": 1758,
+                "y": 285,
+                "Stats": true
+            }
+        ],
+        "ManaPosition": [
+            {
+                "x": 1759,
+                "y": 298,
+                "Stats": true
+            }
+        ],
+        "BattlePosition": [
+            {
+                "x": 1580,
+                "y": 399,
+                "Stats": true
+            }
+        ],
+        "PlayersBattlePosition": [
+            {
+                "x": 1581,
+                "y": 121,
+                "Stats": true
+            }
+        ],
+        "PlayerPosition": [
+            {
+                "x": 872,
+                "y": 406,
+                "Stats": true
+            }
+        ]
+    },
+    "Boxes": {
+        "StatusBarBox": [
+            {
+                "x": 1753,
+                "y": 264,
+                "w": 1858,
+                "h": 274,
+                "Stats": true
+            }
+        ],
+        "BattleBox": [
+            {
+                "x": 1580,
+                "y": 399,
+                "w": 1727,
+                "h": 814,
+                "Stats": true
+            }
+        ],
+        "PlayersBattleBox": [
+            {
+                "x": 1581,
+                "y": 121,
+                "w": 1728,
+                "h": 536,
+                "Stats": true
+            }
+        ],
+        "RingBox": [
+            {
+                "x": 1753,
+                "y": 206,
+                "w": 1784,
+                "h": 237,
+                "Stats": true
+            }
+        ],
+        "AmuletBox": [
+            {
+                "x": 1753,
+                "y": 134,
+                "w": 1784,
+                "h": 165,
+                "Stats": true
+            }
+        ],
+        "GameWindowBox": [
+            {
+                "x": 1,
+                "y": 2,
+                "w": 1744,
+                "h": 811,
+                "Stats": true
+            }
+        ],
+        "MapBox": [
+            {
+                "x": 1753,
+                "y": 5,
+                "w": 1858,
+                "h": 113,
+                "Stats": true
+            }
+        ]
+    },
+    "SQM": {
+        "SQM1": [
+            {
+                "x": 756,
+                "y": 479,
+                "Stats": true
+            }
+        ],
+        "SQM2": [
+            {
+                "x": 872,
+                "y": 479,
+                "Stats": true
+            }
+        ],
+        "SQM3": [
+            {
+                "x": 988,
+                "y": 479,
+                "Stats": true
+            }
+        ],
+        "SQM4": [
+            {
+                "x": 756,
+                "y": 406,
+                "Stats": true
+            }
+        ],
+        "SQM5": [
+            {
+                "x": 872,
+                "y": 406,
+                "Stats": true
+            }
+        ],
+        "SQM6": [
+            {
+                "x": 988,
+                "y": 406,
+                "Stats": true
+            }
+        ],
+        "SQM7": [
+            {
+                "x": 756,
+                "y": 333,
+                "Stats": true
+            }
+        ],
+        "SQM8": [
+            {
+                "x": 872,
+                "y": 333,
+                "Stats": true
+            }
+        ],
+        "SQM9": [
+            {
+                "x": 988,
+                "y": 333,
+                "Stats": true
+            }
+        ]
+    }
+}

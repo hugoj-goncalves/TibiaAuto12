@@ -176,6 +176,33 @@ class ChooseConfig:
                     pass
 
                 try:
+                    PlayersBattlePositions[0], PlayersBattlePositions[1], PlayersBattlePositions[2], PlayersBattlePositions[3] = GetPlayersBattlePosition()
+                    if PlayersBattlePositions[0] and PlayersBattlePositions[1] and PlayersBattlePositions[2] and PlayersBattlePositions[3] != 0:
+                        print(f"Players Battle Location [X: {PlayersBattlePositions[0]} Y: {PlayersBattlePositions[1]}]")
+                        data['Positions']['PlayersBattlePosition'][0]['x'] = PlayersBattlePositions[0]
+                        data['Positions']['PlayersBattlePosition'][0]['y'] = PlayersBattlePositions[1]
+                        data['Positions']['PlayersBattlePosition'][0]['Stats'] = True
+                        time.sleep(.4)
+                        data['Boxes']['PlayersBattleBox'][0]['x'] = int(PlayersBattlePositions[0])
+                        data['Boxes']['PlayersBattleBox'][0]['y'] = int(PlayersBattlePositions[1])
+                        data['Boxes']['PlayersBattleBox'][0]['w'] = int(PlayersBattlePositions[2])
+                        data['Boxes']['PlayersBattleBox'][0]['h'] = int(PlayersBattlePositions[3])
+                        data['Boxes']['PlayersBattleBox'][0]['Stats'] = True
+                        with open('Scripts/' + ScriptToLoad + '.json', 'w') as wJson:
+                            json.dump(data, wJson, indent=4)
+                    else:
+                        raise Exception
+                except Exception:
+                    print('Players Battle Position Error')
+                    data['Positions']['PlayersBattlePosition'][0]['Stats'] = False
+                    with open('Scripts/' + ScriptToLoad + '.json', 'w') as wJson:
+                        json.dump(data, wJson, indent=4)
+
+                    NumberOfExcepts.append("PlayersBattlePosition")
+
+                    pass
+
+                try:
                     StatsPositions[0], StatsPositions[1], StatsPositions[2], StatsPositions[3] = GetStatsPosition()
                     print('')
                     print(f"Status Bar Start [X: {StatsPositions[0]}, Y: {StatsPositions[1]}]")
