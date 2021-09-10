@@ -159,7 +159,8 @@ Monsters = [
     "CorymCharlatan",
     "CorymSkirmisher",
     "CorymVanguard",
-    "Stonerefiner"
+    "Stonerefiner",
+    "Larva"
 ]
 
 # Hotkeys For Pause CaveBot Module

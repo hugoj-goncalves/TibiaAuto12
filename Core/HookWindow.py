@@ -235,8 +235,7 @@ def LocateBoolRGBImage(image, Region=None, Precision=0.9):
 
 
 def PixelMatchesColor(X, Y, expectedRGBColor):
-    TakedImage = TakeImage(Region=(X, Y, X + 1, Y + 1))
-    rgb = TakedImage.getpixel((0, 0))
+    rgb = GetPixelColor(X, Y)
     if rgb == expectedRGBColor:
         return True
     else:
@@ -268,7 +267,6 @@ def GetImageSize(needleImage):
     needleImage = ImageOps.grayscale(needleImage)
     needleWidth, needleHeight = needleImage.size
     return needleWidth, needleHeight
-
 
 def IsFocused():
     return int(win32gui.GetForegroundWindow())

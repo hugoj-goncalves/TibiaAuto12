@@ -124,8 +124,8 @@ class CaveBotController:
                 if self.Target[0] != 0 and self.Target[1] != 0:
 
                     # Verify If You Are Already Attacking !
-                    if IsAttacking(self.BattlePosition):
-                        print("Attacking The Target")
+                    if not IsAttacking(self.BattlePosition):
+                        print("Attacking The Target: ", self.Target[0], self.Target[1], ' Mouse option: ', self.MOUSE_OPTION)
 
                         if self.MOUSE_OPTION == 1:
                             PastPosition = self.SendToClient.Position()

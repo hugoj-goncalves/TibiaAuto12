@@ -67,6 +67,7 @@ class ThreadManager:
         self.Queue = Queue
         self.Target = None
         self.Managed = Managed
+        self.Running = None
 
         if self.Managed:
             self.Running = Event()
