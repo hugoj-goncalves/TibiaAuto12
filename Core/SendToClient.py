@@ -68,7 +68,7 @@ class SendToClient:
     '''
 
     def Press(self, Key):
-        print('sending key: ', Key)
+        # print('sending key: ', Key)
         win32api.SendMessage(self.hwnd, win32con.WM_KEYDOWN, KeyToHex.get(Key, ""), 0)
         win32api.SendMessage(self.hwnd, win32con.WM_KEYUP, KeyToHex.get(Key, ""), 0)
 

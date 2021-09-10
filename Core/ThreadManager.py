@@ -3,7 +3,7 @@ from queue import Queue
 
 ActivatedThreads = []
 Queue = Queue(maxsize=19)
-Event = Event()
+EventInstance = Event()
 
 '''
     This Class Has Been Rewritten So That We Can Pause The Modules Enabled,
@@ -46,12 +46,25 @@ class AllThreads:
             print('Pausing: ', ActivatedThreads[i][0])
             ActivatedThreads[i][0].PauseOff()
 
+    def CleanupThreads(self):
+        for i in range(len(ActivatedThreads)):
+            print('Cleaning up: ', ActivatedThreads[i][0])
+            ActivatedThreads[i][0].Cleanup()
+
+
 
 class ThreadManager:
-    def __init__(self, Name):
+    def __init__(self, Name, Managed = False, Func = None):
         self.Name = Name
         self.Queue = Queue
         self.Target = None
+        self.Managed = Managed
+
+        if self.Managed:
+            self.Running = Event()
+            if Func == None:
+                raise Exception('Func needs to be defined for Managed threads')
+            self.NewThread(Func)
 
     # Create One New Thread And Put Them In The Pipeline
     def NewThread(self, _Target):
@@ -62,10 +75,11 @@ class ThreadManager:
 
         self.Target = Pipeline(HandleTarget)
         self.Queue.put(self.Target)
-        Event.set()
-        TheThread = self.ThreadHandler(Target=self.Target, Qqueue=Queue, Name=self.Name)
+        EventInstance.set()
 
+        TheThread = self.ThreadHandler(Target=self.Target, Qqueue=Queue, Name=self.Name, Managed=self.Managed, RunningEvent=self.Running)
         TheThread.start()
+
         ActivatedThreads.append((TheThread, str(self.Name)))
         print('ActivatedThreads: ', ActivatedThreads)
 
@@ -103,16 +117,20 @@ class ThreadManager:
     '''
 
     class ThreadHandler(Thread):
-        def __init__(self, Target, Qqueue, *, Name='Handler'):
+        def __init__(self, Target, Qqueue, *, Name='Handler', Managed=False, RunningEvent=None):
             super().__init__()
             self.Name = Name
             self.Queue = Qqueue
             self._target = Target
             self._stoped = False
+
+            self.Managed = Managed
+            self.RunningEvent = RunningEvent
+            self.Running = True
             # print(self.Name, "Created")
 
         def run(self):
-            # Event.wait()
+            # EventInstance.wait()
             try:
                 while not self.Queue.empty():
                     SelectedThread = self.Queue.get()
@@ -122,15 +140,32 @@ class ThreadManager:
                         self._stoped = True
                         # self.Queue.pop(-1)
                         break
-                    self._target(SelectedThread)
+
+                    if self.Managed and self.RunningEvent:
+                        while self.Running:
+                            run = self.RunningEvent.wait(3)
+                            if run:
+                                self._target(SelectedThread)
+                    else:
+                        self._target(SelectedThread)
             finally:
                 print('Thread ended: ', self.Name)
 
         def PauseOn(self):
-            self._stoped = False
+            if self.Managed and self.RunningEvent:
+               self.RunningEvent.clear()
+            else:
+               self._stoped = False
 
         def PauseOff(self):
-            self._stoped = True
+            if self.Managed and self.RunningEvent:
+               self.RunningEvent.set()
+            else:
+                self._stoped = True
+
+        def Cleanup(self):
+            if self.Managed:
+                self.Running = False
 
         def __repr__(self) -> str:
             return str(self.Name)

@@ -44,7 +44,7 @@ class FoodEater:
             while EnabledFoodEater:
                 self.SendToClient.Press(HotkeyFoodEater.get())
                 print("Pressed ", HotkeyFoodEater.get(), " To Eat Food")
-                time.sleep(10)
+                time.sleep(4*60)
 
         def Checking():
             HotkeyOption = self.FoodEater.addOption(HotkeyFoodEater, self.SendToClient.Hotkeys, [145, 170], 10)
@@ -63,9 +63,6 @@ class FoodEater:
 
             self.FoodEater.destroyWindow()
 
-        # CheckPrint = tk.BooleanVar()
-        # LowMana = tk.BooleanVar()
-
         self.FoodEater.addButton('Ok', Destroy, [84, 29, 130, 504], [5, 50, 8])
 
         global EnabledFoodEater
@@ -75,10 +72,6 @@ class FoodEater:
         else:
             ButtonEnabled = self.FoodEater.addButton('FoodEater: ON', SetFoodEater, [328, 29, 12, 469],
                                                        [5, 17, 8])
-
-        # ButtonPrint = self.FoodEater.addCheck(CheckPrint, [10, 408], [120, 98, 51], 0, "Print on Tibia's screen")
-
-        # ButtonLowMana = self.FoodEater.addCheck(LowMana, [10, 440], [120, 98, 51], 0, "Low Mana Warnings")
 
         Checking()
 

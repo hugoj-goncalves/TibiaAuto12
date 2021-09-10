@@ -26,7 +26,7 @@
             "CheckBuff": false,
             "ManaCheckStageOne": true,
             "ManaCheckStageTwo": false,
-            "ManaPercentageStageOne": 70,
+            "ManaPercentageStageOne": 50,
             "ManaHotkeyStageOne": "F2",
             "ManaPercentageStageTwo": 45,
             "ManaHotkeyStageTwo": "Shift + F12",

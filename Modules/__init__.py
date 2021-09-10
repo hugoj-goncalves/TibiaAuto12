@@ -106,7 +106,9 @@ def WindowSelectCharacter():
     def exiting():
         print("Exiting...")
         try:
-            AllThreads().PauseThreads()
+            allThreads = AllThreads()
+            allThreads.PauseThreads()
+            allThreads.CleanupThreads()
             SelectCharacter.destroy()
         except Exception as Ex:
             print(Ex)

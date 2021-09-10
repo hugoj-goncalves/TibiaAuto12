@@ -58,7 +58,6 @@ ContainersNamePath = None
 CavebotScriptsPath = None
 
 
-
 class root:
     def __init__(self, CharName, LoadedJson):
         self.root = GUI('root', 'TibiaAuto V12')
@@ -105,10 +104,13 @@ class root:
 
         def Exit():
             print("Exiting...")
-            AllThreads().PauseThreads()
+            allThreads = AllThreads()
+            allThreads.PauseThreads()
+            allThreads.CleanupThreads()
             self.root.destroyWindow()
 
         self.root.addButton('Exit', Exit, [92, 23], [10, 498])
+        self.root.Protocol(Exit)
 
         # endregion
 

@@ -26,7 +26,7 @@ class ScanStages:
                     # print(f"Get {self.name}: {self.stage}%")
                     return self.stage
 
-    def ScanStagesBattle(self, Localization, color, size):
+    def ScanStagesBattle(self, Localization, size):
         if PixelMatchesColor(Localization[0] + size - 1, Localization[1],
                              (LifeColorGreenBattle[0], LifeColorGreenBattle[1], LifeColorGreenBattle[2])):
             self.stage = 100

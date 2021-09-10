@@ -1,7 +1,6 @@
 import time
 
 from Conf.Hotkeys import Hotkey
-from Conf.Constants import LifeColor, LifeColorFull, LifeColorEmptyBattle
 
 from Core.GUI import *
 from Core.GUISetter import GUISetter
@@ -69,18 +68,18 @@ class HealerFriend:
                     # SaveImage('images/Tests/Test.png', Region=(Target[0] + 29, Target[1] + 8, Target[0] + 30, Target[1] + 11))
                     
                     Target = [Target[0] + 29, Target[1] + 8]
-                    Life = self.Scan.ScanStagesBattle(Target, LifeColorEmptyBattle, 130)
+                    Life = self.Scan.ScanStagesBattle(Target, 130)
                     if Life is None:
                         Life = 0
 
                     # print('Life: ', Life)
                     if Life > 0:
-                        if Life < 70:
+                        if Life < 80:
                             print("Pressed ", HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
                             self.SendToClient.Press(HotkeyHealerFriend.get())
                             time.sleep(1)
                             continue
-                time.sleep(.2)
+                time.sleep(.15)
 
         def Checking():
             HotkeyOption = self.HealerFriend.addOption(
