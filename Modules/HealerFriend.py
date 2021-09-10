@@ -1,10 +1,8 @@
-import time
-
 from Conf.Hotkeys import Hotkey
 
 from Core.GUI import *
 from Core.GUISetter import GUISetter
-from Core.ThreadManager import ThreadManager
+from Core.ThreadManager import AllThreads, ThreadManager
 from Core.HookWindow import LocateCenterImage, SaveImage
 
 from Engine.ScanStages import ScanStages
@@ -12,78 +10,75 @@ from Engine.ScanStages import ScanStages
 GUIChanges = []
 
 EnabledHealerFriend = False
-ThreadStarted = False
 
 class HealerFriend:
-    def __init__(self, root, MOUSE_OPTION, BattlePosition):
+    def ScanTarget(self, BattlePosition, Target):
+        HasTarget = [0, 0]
+
+        HasTarget[0], HasTarget[1] = LocateCenterImage('images/Targets/Players/Names/' + Target + '.png', Precision=0.86, LeftHandle=True, Region=(
+            BattlePosition[0], BattlePosition[1], BattlePosition[2], BattlePosition[3]))
+
+        if HasTarget[0] != 0 and HasTarget[1] != 0:
+            if HasTarget[0] < BattlePosition[0]:
+                return (BattlePosition[0] - 30) + HasTarget[0] + 1, HasTarget[1] + BattlePosition[1] + 1
+            else:
+                return (BattlePosition[0] - 40) + HasTarget[0] + 1, HasTarget[1] + BattlePosition[1] + 1
+        else:
+            return 0, 0
+
+    def ScanHealerFriend(self, wait):
+        Target = self.ScanTarget(self.BattlePosition, "Tataruga")
+        # print("Target: ", Target[0], " - ", Target[1])
+        if Target[0] != 0 and Target[1] != 0:
+            # SaveImage('images/Tests/TestMaior.png', Region=(Target[0] + 29, Target[1] - 4, Target[0] + 159, Target[1] + 13))
+            # SaveImage('images/Tests/Test.png', Region=(Target[0] + 29, Target[1] + 8, Target[0] + 30, Target[1] + 11))
+            
+            Target = [Target[0] + 29, Target[1] + 8]
+            Life = self.Scan.ScanStagesBattle(Target, 130)
+            if Life is None:
+                Life = 0
+
+            # print('Life: ', Life)
+            if Life > 0:
+                if Life < 80:
+                    print("Pressed ", self.HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
+                    self.SendToClient.Press(self.HotkeyHealerFriend.get())
+                    wait(1)
+                    return
+        wait(.15)
+
+    def __init__(self, MOUSE_OPTION, BattlePosition):
         self.HealerFriend = GUI('HealerFriend', 'Module: Healer Friend')
         self.HealerFriend.DefaultWindow('AutoHeal2', [306, 372], [1.2, 2.29])
         self.Setter = GUISetter("HealerFriendLoader")
         self.Scan = ScanStages('Life')
         self.SendToClient = Hotkey(MOUSE_OPTION)
-        self.ThreadManager = ThreadManager("ThreadHealerFriend")
 
-        HotkeyHealerFriend, InitiatedHotkeyHealerFriend = self.Setter.Variables.Str(
-            'HotkeyHealerFriend')
+        self.AllThreads = AllThreads()
+        self.ThreadName = 'ThreadHealerFriend'
+        if not self.AllThreads.ExistsThread(self.ThreadName):
+            self.ThreadManager = ThreadManager(self.ThreadName, Managed=True, Func=self.ScanHealerFriend)
+
+        self.BattlePosition = BattlePosition
+        self.HotkeyHealerFriend, self.InitiatedHotkeyHealerFriend = self.Setter.Variables.Str('HotkeyHealerFriend')
 
         def SetHealerFriend():
             global EnabledHealerFriend
-            global ThreadStarted
             if not EnabledHealerFriend:
                 EnabledHealerFriend = True
                 ButtonEnabled.configure(text='HealerFriend: ON')
                 Checking()
-                if not ThreadStarted:
-                    ThreadStarted = True
-                    self.ThreadManager.NewThread(ScanHealerFriend)
-                else:
-                    self.ThreadManager.UnPauseThread()
+                self.AllThreads.UnPauseThreads(self.ThreadName)
             else:
                 EnabledHealerFriend = False
                 ButtonEnabled.configure(text='HealerFriend: OFF')
                 Checking()
-                self.ThreadManager.PauseThread()
+                self.AllThreads.PauseThreads(self.ThreadName)
 
-
-        def ScanTarget(BattlePosition, Target):
-            HasTarget = [0, 0]
-
-            HasTarget[0], HasTarget[1] = LocateCenterImage('images/Targets/Players/Names/' + Target + '.png', Precision=0.86, LeftHandle=True, Region=(
-                BattlePosition[0], BattlePosition[1], BattlePosition[2], BattlePosition[3]))
-
-            if HasTarget[0] != 0 and HasTarget[1] != 0:
-                if HasTarget[0] < BattlePosition[0]:
-                    return (BattlePosition[0] - 30) + HasTarget[0] + 1, HasTarget[1] + BattlePosition[1] + 1
-                else:
-                    return (BattlePosition[0] - 40) + HasTarget[0] + 1, HasTarget[1] + BattlePosition[1] + 1
-            else:
-                return 0, 0
-
-        def ScanHealerFriend():
-            while EnabledHealerFriend:
-                Target = ScanTarget(BattlePosition, "Tataruga")
-                # print("Target: ", Target[0], " - ", Target[1])
-                if Target[0] != 0 and Target[1] != 0:
-                    # SaveImage('images/Tests/TestMaior.png', Region=(Target[0] + 29, Target[1] - 4, Target[0] + 159, Target[1] + 13))
-                    # SaveImage('images/Tests/Test.png', Region=(Target[0] + 29, Target[1] + 8, Target[0] + 30, Target[1] + 11))
-                    
-                    Target = [Target[0] + 29, Target[1] + 8]
-                    Life = self.Scan.ScanStagesBattle(Target, 130)
-                    if Life is None:
-                        Life = 0
-
-                    # print('Life: ', Life)
-                    if Life > 0:
-                        if Life < 80:
-                            print("Pressed ", HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
-                            self.SendToClient.Press(HotkeyHealerFriend.get())
-                            time.sleep(1)
-                            continue
-                time.sleep(.15)
 
         def Checking():
             HotkeyOption = self.HealerFriend.addOption(
-                HotkeyHealerFriend, self.SendToClient.Hotkeys, [145, 170], 10)
+                self.HotkeyHealerFriend, self.SendToClient.Hotkeys, [145, 170], 10)
             if EnabledHealerFriend:
                 HotkeyOption.configure(state='disabled')
             else:
@@ -94,8 +89,8 @@ class HealerFriend:
                 GUIChanges.append((Name, Get))
 
         def Destroy():
-            CheckingGUI(InitiatedHotkeyHealerFriend,
-                        HotkeyHealerFriend.get(), 'HotkeyHealerFriend')
+            CheckingGUI(self.InitiatedHotkeyHealerFriend,
+                        self.HotkeyHealerFriend.get(), 'HotkeyHealerFriend')
 
             self.HealerFriend.destroyWindow()
 

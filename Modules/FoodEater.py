@@ -4,50 +4,46 @@ from Conf.Hotkeys import Hotkey
 
 from Core.GUI import *
 from Core.GUISetter import GUISetter
-from Core.ThreadManager import ThreadManager
+from Core.ThreadManager import AllThreads, ThreadManager
 
 GUIChanges = []
 
 EnabledFoodEater = False
-ThreadStarted = False
 
 class FoodEater:
-    def __init__(self, root, MOUSE_OPTION):
+    def ScanFoodEater(self, wait):
+        self.SendToClient.Press(self.HotkeyFoodEater.get())
+        print("Pressed ", self.HotkeyFoodEater.get(), " To Eat Food")
+        wait(4*60)
+
+    def __init__(self, MOUSE_OPTION):
         self.FoodEater = GUI('FoodEater', 'Module: Food Eater')
         self.FoodEater.DefaultWindow('AutoHeal2', [306, 372], [1.2, 2.29])
         self.Setter = GUISetter("FoodEaterLoader")
         self.SendToClient = Hotkey(MOUSE_OPTION)
-        self.ThreadManager = ThreadManager("ThreadFoodEater")
 
-        HotkeyFoodEater, InitiatedHotkeyFoodEater = self.Setter.Variables.Str('HotkeyFoodEater')
+        self.AllThreads = AllThreads()
+        self.ThreadName = 'ThreadFoodEater'
+        if not self.AllThreads.ExistsThread(self.ThreadName):
+            self.ThreadManager = ThreadManager(self.ThreadName, Managed=True, Func=self.ScanFoodEater)
+
+        self.HotkeyFoodEater, self.InitiatedHotkeyFoodEater = self.Setter.Variables.Str('HotkeyFoodEater')
 
         def SetFoodEater():
             global EnabledFoodEater
-            global ThreadStarted
             if not EnabledFoodEater:
                 EnabledFoodEater = True
                 ButtonEnabled.configure(text='FoodEater: ON')
                 Checking()
-                if not ThreadStarted:
-                    ThreadStarted = True
-                    self.ThreadManager.NewThread(ScanFoodEater)
-                else:
-                    self.ThreadManager.UnPauseThread()
+                self.AllThreads.UnPauseThreads(self.ThreadName)
             else:
                 EnabledFoodEater = False
                 ButtonEnabled.configure(text='FoodEater: OFF')
                 Checking()
-                self.ThreadManager.PauseThread()
-
-
-        def ScanFoodEater():
-            while EnabledFoodEater:
-                self.SendToClient.Press(HotkeyFoodEater.get())
-                print("Pressed ", HotkeyFoodEater.get(), " To Eat Food")
-                time.sleep(4*60)
+                self.AllThreads.PauseThreads(self.ThreadName)
 
         def Checking():
-            HotkeyOption = self.FoodEater.addOption(HotkeyFoodEater, self.SendToClient.Hotkeys, [145, 170], 10)
+            HotkeyOption = self.FoodEater.addOption(self.HotkeyFoodEater, self.SendToClient.Hotkeys, [145, 170], 10)
             if EnabledFoodEater:
                 HotkeyOption.configure(state='disabled')
             else:
@@ -59,7 +55,7 @@ class FoodEater:
 
         def Destroy():
             print('FoodEater Destroy called!')
-            CheckingGUI(InitiatedHotkeyFoodEater, HotkeyFoodEater.get(), 'HotkeyFoodEater')
+            CheckingGUI(self.InitiatedHotkeyFoodEater, self.HotkeyFoodEater.get(), 'HotkeyFoodEater')
 
             self.FoodEater.destroyWindow()
 

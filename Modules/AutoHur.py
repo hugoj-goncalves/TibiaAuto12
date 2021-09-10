@@ -1,69 +1,64 @@
-import time
-
 from Conf.Hotkeys import Hotkey
 
 from Core.GUI import *
 from Core.GUIManager import *
 from Core.GUISetter import GUISetter
-from Core.ThreadManager import ThreadManager
+from Core.ThreadManager import AllThreads, ThreadManager
 
 from Engine.ScanHur import ScanHur
 
 GUIChanges = []
 
 EnabledAutoHur = False
-ThreadStarted = False
 
 class AutoHur:
+    def ScanAutoHur(self, wait):
+        try:
+            NeedHur = ScanHur(self.StatsPositions)
+        except Exception:
+            NeedHur = False
+            pass
+        if NeedHur:
+            self.SendToClient.Press(self.VarHotkeyHur.get())
+            print("Hur Pressed ", self.VarHotkeyHur.get())
+            wait(10)
+        wait(.15)
+
     def __init__(self, StatsPositions, MOUSE_OPTION):
+        self.StatsPositions = StatsPositions
+
         self.AutoHur = GUI('AutoHur', 'Module: Auto Hur')
         self.AutoHur.DefaultWindow('AutoHur', [224, 258], [1.2, 2.29])
         self.Setter = GUISetter("HurLoader")
         self.SendToClient = Hotkey(MOUSE_OPTION)
-        self.ThreadManager = ThreadManager("ThreadAutoHur")
+
+        self.AllThreads = AllThreads()
+        self.ThreadName = 'ThreadAutoHur'
+        if not self.AllThreads.ExistsThread(self.ThreadName):
+            self.ThreadManager = ThreadManager(self.ThreadName, Managed=True, Func=self.ScanAutoHur)
+
+        self.VarHotkeyHur, self.InitiatedHotkeyHur = self.Setter.Variables.Str('HotkeyHur')
+        VarCheckPrint, InitiatedCheckPrint = self.Setter.Variables.Bool('CheckPrint')
+        VarCheckBuff, InitiatedCheckBuff = self.Setter.Variables.Bool('CheckBuff')
+        CheckLowMana, InitiatedCheckLowMana = self.Setter.Variables.Bool('CheckLowMana')
 
         def SetAutoHur():
             global EnabledAutoHur
-            global ThreadStarted
             if not EnabledAutoHur:
                 EnabledAutoHur = True
                 ButtonEnabled.configure(text='AutoHur: ON', relief=SUNKEN, bg=rgb((158, 46, 34)))
                 print("AutoHur: ON")
                 CheckingButtons()
-                if not ThreadStarted:
-                    ThreadStarted = True
-                    self.ThreadManager.NewThread(ScanAutoHur)
-                else:
-                    self.ThreadManager.UnPauseThread()
+                self.AllThreads.UnPauseThreads(self.ThreadName)
             else:
                 EnabledAutoHur = False
                 CheckingButtons()
                 print("AutoHur: OFF")
                 ButtonEnabled.configure(text='AutoHur: OFF', relief=RAISED, bg=rgb((127, 17, 8)))
-                self.ThreadManager.PauseThread()
-
-        def ScanAutoHur():
-            while EnabledAutoHur:
-                try:
-                    NeedHur = ScanHur(StatsPositions)
-                except Exception:
-                    NeedHur = False
-                    pass
-                if NeedHur:
-                    self.SendToClient.Press(VarHotkeyHur.get())
-                    print("Hur Pressed ", VarHotkeyHur.get())
-                    time.sleep(.3)
-                time.sleep(.3)
+                self.AllThreads.PauseThreads(self.ThreadName)
 
         def Recapture():
             print("recapture")
-
-        VarCheckPrint, InitiatedCheckPrint = self.Setter.Variables.Bool('CheckPrint')
-        VarCheckBuff, InitiatedCheckBuff = self.Setter.Variables.Bool('CheckBuff')
-
-        VarHotkeyHur, InitiatedHotkeyHur = self.Setter.Variables.Str('HotkeyHur')
-
-        CheckLowMana, InitiatedCheckLowMana = self.Setter.Variables.Bool('CheckLowMana')
 
         def CheckingGUI(Init, Get, Name):
             if Get != Init:
@@ -72,7 +67,7 @@ class AutoHur:
         def Destroy():
             CheckingGUI(InitiatedCheckPrint, VarCheckPrint.get(), 'CheckPrint')
             CheckingGUI(InitiatedCheckBuff, VarCheckBuff.get(), 'CheckBuff')
-            CheckingGUI(InitiatedHotkeyHur, VarHotkeyHur.get(), 'HotkeyHur')
+            CheckingGUI(self.InitiatedHotkeyHur, self.VarHotkeyHur.get(), 'HotkeyHur')
             CheckingGUI(InitiatedCheckLowMana, CheckLowMana.get(), 'CheckLowMana')
 
             if len(GUIChanges) != 0:
@@ -102,7 +97,7 @@ class AutoHur:
         LabelImage = self.AutoHur.addImage(ImageID, [28, 33])
 
         LabelHotkey = self.AutoHur.addLabel('Hotkey', [135, 48])
-        HotkeyHur = self.AutoHur.addOption(VarHotkeyHur, self.SendToClient.Hotkeys, [113, 72], 8)
+        HotkeyHur = self.AutoHur.addOption(self.VarHotkeyHur, self.SendToClient.Hotkeys, [113, 72], 8)
 
         ButtonRecapture = self.AutoHur.addButton('Recapture', Recapture, [85, 24], [20, 111])
 

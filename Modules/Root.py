@@ -301,7 +301,7 @@ def OpenCreatureInfo():
 
 
 def OpenFoodEater():
-    FoodEater(root, MOUSE_OPTION)
+    FoodEater(MOUSE_OPTION)
 
 
 def OpenFPSChanger():
@@ -315,7 +315,7 @@ def OpenGeneralOptions():
 
 
 def OpenHealerFriend():
-    HealerFriend(root, MOUSE_OPTION, PlayersBattlePositions)
+    HealerFriend(MOUSE_OPTION, PlayersBattlePositions)
 
 
 def OpenLoadConfig():
