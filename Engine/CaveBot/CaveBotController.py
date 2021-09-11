@@ -3,7 +3,7 @@ from time import sleep, time
 
 from Conf.Hotkeys import Hotkey
 
-from Core.HookWindow import LocateCenterImage
+from Core.HookWindow import LocateCenterImage, LocateImageNew, TakeImage
 from Engine.CaveBot.Scanners import NumberOfTargets, ScanTarget, IsAttacking, NeedFollow, CheckWaypoint
 
 TargetNumber = 0
@@ -11,7 +11,7 @@ NumberOfMonster = []
 
 
 class CaveBotController:
-    def __init__(self, MOUSE_OPTION, ScriptName, LootButton, TimeToStand, Walk, Loot, ForRefresh, MapPosition, BattlePosition, SQMs):
+    def __init__(self, MOUSE_OPTION, ScriptName, LootButton, TimeToStand, Walk, Loot, Follow, ForRefresh, MapPosition, BattlePosition, PlayerPosition, SQMs, SQMSize):
         self.MOUSE_OPTION = MOUSE_OPTION
         self.SendToClient = Hotkey(self.MOUSE_OPTION)
         self.ScriptName = ScriptName
@@ -22,12 +22,32 @@ class CaveBotController:
         self.WalkForRefresh = ForRefresh
         self.MapPosition = MapPosition
         self.BattlePosition = BattlePosition
+        self.PlayerPosition = PlayerPosition
         self.SQMs = SQMs
+        self.SQMSize = SQMSize
         self.Target = []
+        self.FollowMode = Follow
 
-        # Remember Set For Get From Cavebot (for me)
+        SQMW = self.SQMSize[0]
+        SQMH = self.SQMSize[1]
+        self.SQMsAroundPlayerRegion = (
+            self.SQMs[12] - (SQMW / 2), self.SQMs[13] - (SQMH / 2),
+            self.SQMs[4] + (SQMW / 2), self.SQMs[5] + (SQMH / 2)
+        )
 
-        self.FollowMode = True
+        self.AttackingForTooLongTimeInSeconds = 10
+        self.LastAttackTime = time()
+
+        TakedImage = TakeImage(
+            Region=(
+                self.PlayerPosition[0] - (SQMW / 2), self.PlayerPosition[1] - (SQMH / 2),
+                self.PlayerPosition[0] + (SQMW / 2), self.PlayerPosition[1] + (SQMH / 2)
+            )
+        )
+        TakedImage.save('images/Tests/TestPlayer.png')
+        TakedImage = TakeImage(self.SQMsAroundPlayerRegion)
+        TakedImage.save('images/Tests/TestSqms.png')
+
 
     '''
     StartCaveBot Take The Data From Module CaveBot And Search For Mark With Status TRUE,
@@ -56,6 +76,7 @@ class CaveBotController:
 
         if not IsEnable():
             return
+
 
         '''
         Disconsider This Block If You Don't Mark The Walk Option...
@@ -137,15 +158,17 @@ class CaveBotController:
                         if self.MOUSE_OPTION == 1:
                             self.SendToClient.MoveTo(PastPosition[0], PastPosition[1])
 
+                        self.LastAttackTime = time()
                         FirstMonstersNumber = NumberOfTargets(self.BattlePosition, Monster)
                     else:
+                        # if time() - self.LastAttackTime > self.AttackingForTooLongTimeInSeconds:
+                        #     self.SendToClient.LeftClick(self.Target[0], self.Target[1])
+                        #     print('Attacking for too long')
                         print("You are attacking")
                         FirstMonstersNumber = NumberOfTargets(self.BattlePosition, Monster)
 
                 # Control Follow Mode In Attack (Follow Or Idle)
-
                 if self.FollowMode:
-
                     IsNeedFollow = NeedFollow()
 
                     if IsNeedFollow:
@@ -167,9 +190,8 @@ class CaveBotController:
                 if self.Target[0] != 0 and self.Target[1] != 0:
 
                     # Verify If You Are Already Attacking !
-                    if IsAttacking(self.BattlePosition):
-                        # For Debugging
-                        # print("Attacking The Target2")
+                    if not IsAttacking(self.BattlePosition):
+                        print("Attacking The Target2: ", self.Target[0], self.Target[1], ' Mouse option: ', self.MOUSE_OPTION)
 
                         if self.MOUSE_OPTION == 1:
                             PastPosition = self.SendToClient.Position()
@@ -181,10 +203,13 @@ class CaveBotController:
                         if self.MOUSE_OPTION == 1:
                             self.SendToClient.MoveTo(PastPosition[0], PastPosition[1])
 
+                        self.LastAttackTime = time()
                         SecondMonstersNumber = NumberOfTargets(self.BattlePosition, Monster)
                     else:
-                        # For Debugging
-                        # print("You are attacking2")
+                        # if time() - self.LastAttackTime > self.AttackingForTooLongTimeInSeconds:
+                        #     self.SendToClient.LeftClick(self.Target[0], self.Target[1])
+                        #     print('Attacking2 for too long')
+                        print("You are attacking2")
 
                         SecondMonstersNumber = NumberOfTargets(self.BattlePosition, Monster)
 

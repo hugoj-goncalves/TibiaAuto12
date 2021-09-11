@@ -51,6 +51,7 @@ BattlePositions = [0, 0, 0, 0]
 PlayersBattlePositions = [0, 0, 0, 0]
 AmuletPositions = [0, 0, 0, 0]
 SQMs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+SQMSizes = [0, 0]
 MainPath = None
 ItemsPath = None
 ChestsPath = None
@@ -199,6 +200,8 @@ class root:
                     SQMs[15] = data['SQM']['SQM8'][0]['y']
                     SQMs[16] = data['SQM']['SQM9'][0]['x']
                     SQMs[17] = data['SQM']['SQM9'][0]['y']
+                    SQMSizes[0] = data['SQMSize']['x']
+                    SQMSizes[1] = data['SQMSize']['y']
 
                 global MainPath, ItemsPath, ChestsPath, ContainersNamePath, CavebotScriptsPath
                 MainPath = data["Paths"]["MainPath"]
@@ -287,7 +290,7 @@ def OpenAutoSSA():
 
 
 def OpenCaveBot():
-    CaveBot(MapPositions, BattlePositions, SQMs, MOUSE_OPTION)
+    CaveBot(MapPositions, BattlePositions, Player, SQMs, SQMSizes, MOUSE_OPTION)
 
 
 def OpenColorChange():

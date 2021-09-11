@@ -20,7 +20,7 @@ ThreadStarted = False
 LoadedScript = False
 
 class CaveBot:
-    def __init__(self, MapPositions, BattlePositions, SQMs, MOUSE_OPTION):
+    def __init__(self, MapPositions, BattlePositions, PlayerPosition, SQMs, SQMSize, MOUSE_OPTION):
         self.CaveBot = GUI('CaveBot', 'Module: Cave Bot')
         self.CaveBot.DefaultWindow('CaveBot', [830, 634], [1.2, 2.29])
         self.Setter = GUISetter("CaveBotLoader")
@@ -49,14 +49,12 @@ class CaveBot:
             ScriptName = Script.get()
             with open('Scripts/' + ScriptName + '.json', 'r') as rJson:
                 data = json.load(rJson)
+            print("The Script " + ScriptName + ".json Have a", len(data), "Marks")
 
-            # For Debugging
-            # print("The Script " + ScriptName + ".json Have a", len(data), "Marks")
-
+            CheckLoot = True
             Controller = CaveBotController(MOUSE_OPTION, ScriptName, 'right', Stand.get(),
-                                           CheckEnableWalking.get(), True, CheckWalkForDebug.get(), MapPositions,
-                                           BattlePositions, SQMs)
-
+                                           CheckEnableWalking.get(), CheckLoot, CheckFollow.get(), CheckWalkForDebug.get(), MapPositions,
+                                           BattlePositions, PlayerPosition, SQMs, SQMSize)
             MonstersToAttack = []
 
             if CheckAttackOne.get():

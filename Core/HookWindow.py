@@ -139,7 +139,10 @@ def TakeImage(Region=None):
 '''
 
 
-def LocateImage(image, Region=None, Precision=0.8):
+def LocateImage(image, Region=None, Precision=0.8, New=False, Debug=False):
+    if New:
+        return LocateImageNew(image, Region, Precision)
+
     TakedImage = TakeImage(Region)
 
     img_rgb = np.array(TakedImage)
@@ -147,11 +150,77 @@ def LocateImage(image, Region=None, Precision=0.8):
     template = cv2.imread(image, 0)
 
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+
+    if Debug:
+        w, h = template.shape[::-1]
+        loc = np.where(res >= Precision)
+        for pt in zip(*loc[::-1]):
+            cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        print('debugging: ', image)
+        cv2.imshow('output test', img_rgb)
+        cv2.waitKey(0)
+
     min_val, LocatedPrecision, min_loc, Position = cv2.minMaxLoc(res)
     if LocatedPrecision > Precision:
         return Position[0], Position[1]
     return 0, 0
 
+def LocateImageNew(image, Region=None, Precision=0.8):
+    TakedImage = TakeImage(Region)
+    # TakedImage.save('images/Tests/' + image.replace("/", "-"))
+
+    img_rgb = np.array(TakedImage, dtype='uint8')
+    img_rgb_cv2 = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2RGBA)
+
+    mask_result = findImgthres(img_rgb_cv2, image, mask=True, thres=Precision)
+    print(mask_result[1])
+    findImgthresDebugSuccess(mask_result, img_rgb_cv2, image)
+    matchLoc = mask_result[1]
+    if matchLoc is not None and matchLoc.size > 0:
+        return matchLoc[0][0], matchLoc[0][1]
+    return 0, 0
+
+    # img_rgb = np.array(TakedImage)
+    # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    # template = cv2.imread(image, 0)
+
+    # res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+    # min_val, LocatedPrecision, min_loc, Position = cv2.minMaxLoc(res)
+    # if LocatedPrecision > Precision:
+    #     return Position[0], Position[1]
+    # return 0, 0
+
+def findImgthres(img, template_path, mask=False, method=1, thres=.95):
+    tem = cv2.imread(template_path, cv2.IMREAD_UNCHANGED)
+
+    if mask and img.shape[2] == 4:
+        alpha_channel = np.array(cv2.split(tem)[3])
+        result = cv2.matchTemplate(img, tem, method, mask=alpha_channel)
+    else:
+        result = cv2.matchTemplate(img, tem, method)
+
+    # Nomrmalize result data to percent (0-1)
+    # # result = cv2.normalize(result, None, 0, 1, cv2.NORM_MINMAX, -1)
+
+    # Invert Image to work similar across all methods!
+    if method == 0 or method == 1:
+        result = (1 - result)
+
+    result_list = np.argwhere(result > thres)
+    return result, result_list
+
+def findImgthresDebugSuccess(result, img, templatePath):
+    matchLoc = result[1]
+    if matchLoc is not None and matchLoc.size > 0:
+        # Debug
+        print(templatePath, matchLoc)
+        tmp_tem = cv2.imread(templatePath, cv2.IMREAD_UNCHANGED)
+        for loc in matchLoc:
+            cv2.rectangle(img, tuple(loc)[
+                        ::-1], (loc[1] + tmp_tem.shape[1], loc[0] + tmp_tem.shape[0]), (0, 255, 255), 1)
+        cv2.imshow('debug output', img)
+        cv2.waitKey(0)
+        # DebugEnd
 
 '''
     In LocateCenterImage, It Compare With Another Image, If The Two Have Any
@@ -241,8 +310,15 @@ def PixelMatchesColor(X, Y, expectedRGBColor):
     else:
         return False
 
-def GetPixelColor(X, Y):
+def GetPixelColor(X, Y, Debug=False):
     TakedImage = TakeImage(Region=(X, Y, X + 1, Y + 1))
+    if Debug:
+        TakedImageBigger = TakeImage(Region=(X - 25, Y - 25, X + 25 + 1, Y + 25 + 1))
+        img_rgb = np.array(TakedImageBigger, dtype='uint8')
+        img_rgb_cv2 = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2RGBA)
+        cv2.rectangle(img_rgb_cv2, (25, 25), (25 + 1, 25 + 1), (0, 0, 255), 1)
+        cv2.imshow("GetPixelColor Rgb", img_rgb_cv2)
+        cv2.waitKey(0)
     rgb = TakedImage.getpixel((0, 0))
     return rgb
 

@@ -370,6 +370,8 @@ class ChooseConfig:
                     data['SQM']['SQM9'][0]['x'] = int(SQMs[16])
                     data['SQM']['SQM9'][0]['y'] = int(SQMs[17])
                     data['SQM']['SQM9'][0]['Stats'] = True
+                    data['SQMSize']['x'] = int(SQMsSizes[0])
+                    data['SQMSize']['y'] = int(SQMsSizes[1])
                     with open('Scripts/' + ScriptToLoad + '.json', 'w') as wJson:
                         json.dump(data, wJson, indent=4)
                 except Exception:

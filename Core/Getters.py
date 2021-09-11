@@ -1,4 +1,4 @@
-from Core.HookWindow import LocateCenterImage, LocateImage
+from Core.HookWindow import GetPixelColor, LocateCenterImage, LocateImage
 
 BattlePositions = [0, 0, 0, 0]
 PlayersBattlePositions = [0, 0, 0, 0]
@@ -28,7 +28,7 @@ def GetBattlePosition():
         BattlePositions[2] = BattlePositions[0] + 155
         BattlePositions[3] = BattlePositions[1] + 415
 
-        return int(BattlePositions[0] + 8), int(BattlePositions[1]), int(BattlePositions[2]), int(
+        return int(BattlePositions[0]), int(BattlePositions[1]), int(BattlePositions[2]), int(
             BattlePositions[3])
 
 
@@ -42,7 +42,7 @@ def GetPlayersBattlePosition():
         PlayersBattlePositions[2] = PlayersBattlePositions[0] + 155
         PlayersBattlePositions[3] = PlayersBattlePositions[1] + 415
 
-        return int(PlayersBattlePositions[0] + 8), int(PlayersBattlePositions[1]), int(PlayersBattlePositions[2]), int(
+        return int(PlayersBattlePositions[0]), int(PlayersBattlePositions[1]), int(PlayersBattlePositions[2]), int(
             PlayersBattlePositions[3])
 
 
@@ -88,13 +88,89 @@ def GetStatsPosition():
         return 0, 0, 0, 0
 
 
-def GetPlayerPosition():
-    LeftGameWindow = LocateImage("images/PlayerSettings/LeftOption1.png", Precision=0.75)
-    if LeftGameWindow[0] == 0 and LeftGameWindow[1] == 0:
-        LeftGameWindow = LocateImage("images/PlayerSettings/LeftOption2.png", Precision=0.75)
+def GameWindowLeftAdjust(LeftGameWindow):
+    pixelColor = None
+    step = 1
+    i = 0
+    maxDiff = 0
+    while maxDiff <= 2 and pixelColor != (22, 22, 22) and pixelColor != (23, 23, 23):
+        x = LeftGameWindow[0] + (step * i)
+        y = LeftGameWindow[1] + 100
+        pixelColor = GetPixelColor(x, y, Debug=False)
+        max_val = max(pixelColor)
+        min_val = min(pixelColor)
+        maxDiff = max_val - min_val
+        print('x', ': ', pixelColor, step * i, maxDiff)
+        i += 1
 
+    SavedLeftGameWindow0 = LeftGameWindow[0] + (step * i)
+
+    pixelColor = None
+    step = 1
+    i = 0
+    maxDiff = 100
+    while maxDiff >= 2:
+        x = SavedLeftGameWindow0
+        y = LeftGameWindow[1] + 100 - (step * i)
+        pixelColor = GetPixelColor(x, y, Debug=False)
+        max_val = max(pixelColor)
+        min_val = min(pixelColor)
+        maxDiff = max_val - min_val
+        print('y: ', pixelColor, step * i, maxDiff)
+        i += 1
+
+    SavedLeftGameWindow1 = LeftGameWindow[1] + 100 - (step * (i - 1))
+
+    return (SavedLeftGameWindow0, SavedLeftGameWindow1)
+
+def GameWindowRightAdjust(RightGameWindow):
+    pixelColor = None
+    step = 1
+    i = 0
+    maxDiff = 0
+    while maxDiff <= 2:
+        x = RightGameWindow[0] - (step * i)
+        y = RightGameWindow[1] + 100
+        pixelColor = GetPixelColor(x, y, Debug=False)
+        max_val = max(pixelColor)
+        min_val = min(pixelColor)
+        maxDiff = max_val - min_val
+        print('x', ': ', pixelColor, step * i, maxDiff)
+        i += 1
+
+    SavedRightGameWindow0 = RightGameWindow[0] - (step * i)
+
+    pixelColor = None
+    step = 1
+    i = 0
+    maxDiff = 100
+    while maxDiff >= 2:
+        x = SavedRightGameWindow0
+        y = RightGameWindow[1] + 100 + (step * i)
+        pixelColor = GetPixelColor(x, y, Debug=True)
+        max_val = max(pixelColor)
+        min_val = min(pixelColor)
+        maxDiff = max_val - min_val
+        print('y: ', pixelColor, step * i, maxDiff)
+        i += 1
+
+    SavedLeftGameWindow1 = RightGameWindow[1] + 100 + (step * (i - 1))
+
+    return (SavedRightGameWindow0, SavedLeftGameWindow1)
+
+def GetPlayerPosition():
+    Debug = False
+    LeftGameWindow = LocateImage("images/PlayerSettings/LeftOption1.png", Precision=0.75, Debug=Debug)
     if LeftGameWindow[0] == 0 and LeftGameWindow[1] == 0:
-        LeftGameWindow = LocateImage("images/PlayerSettings/LeftOption3.png", Precision=0.75)
+        LeftGameWindow = LocateImage("images/PlayerSettings/LeftOption2.png", Precision=0.75, Debug=Debug)
+    if LeftGameWindow[0] == 0 and LeftGameWindow[1] == 0:
+        LeftGameWindow = LocateImage("images/PlayerSettings/LeftOption3.png", Precision=0.75, Debug=Debug)
+
+    LeftGameWindow = (LeftGameWindow[0] + 10, LeftGameWindow[1] + 56)
+
+    # print('Found left pos: ', LeftGameWindow)
+    # LeftGameWindow = GameWindowLeftAdjust(LeftGameWindow)
+    # print('Adjusted left pos: ', LeftGameWindow)
 
     try:
         GameWindow[0] = int(LeftGameWindow[0])
@@ -102,25 +178,28 @@ def GetPlayerPosition():
     except Exception as errno:
         print("?Error On ", errno)
 
-    RightGameWindow = LocateImage("images/PlayerSettings/RightOption1.png", Precision=0.75)
+    RightGameWindow = LocateImage("images/PlayerSettings/RightOption1.png", Precision=0.75, Debug=Debug)
     if RightGameWindow[0] == 0 and RightGameWindow[1] == 0:
-        RightGameWindow = LocateImage("images/PlayerSettings/RightOption2.png", Precision=0.75)
+        RightGameWindow = LocateImage("images/PlayerSettings/RightOption2.png", Precision=0.75, Debug=Debug)
+    if RightGameWindow[0] == 0 and RightGameWindow[1] == 0:
+        RightGameWindow = LocateImage("images/PlayerSettings/RightOption4.png", Precision=0.75, Debug=Debug)
+    if RightGameWindow[0] == 0 and RightGameWindow[1] == 0:
+        RightGameWindow = LocateImage("images/PlayerSettings/RightOption3.png", Precision=0.75, Debug=Debug)
 
-    if RightGameWindow[0] == 0 and RightGameWindow[1] == 0:
-        RightGameWindow = LocateImage("images/PlayerSettings/RightOption3.png", Precision=0.75)
+    # print('Found right pos: ', RightGameWindow)
+    # RightGameWindow = GameWindowRightAdjust(RightGameWindow)
+    # print('Adjusted right pos: ', RightGameWindow)
 
-    if RightGameWindow[0] == 0 and RightGameWindow[1] == 0:
-        RightGameWindow = LocateImage("images/PlayerSettings/RightOption4.png", Precision=0.75)
     try:
-        GameWindow[2] = int(RightGameWindow[0])
+        GameWindow[2] = int(RightGameWindow[0]) - 3
     except Exception as errno:
         print("?Error On ", errno)
 
-    ButtomGameWindow = LocateImage("images/PlayerSettings/EndLocation.png", Precision=0.7)
-    if ButtomGameWindow[0] == 0 and ButtomGameWindow[1] == 0:
-        print("BUTTON GAME WINDOWS IS NONE")
+    BottomGameWindow = LocateImage("images/PlayerSettings/EndLocation.png", Precision=0.7, Debug=Debug)
+    if BottomGameWindow[0] == 0 and BottomGameWindow[1] == 0:
+        print("BOTTOM GAME WINDOWS IS NONE")
     else:
-        GameWindow[3] = int(ButtomGameWindow[1])
+        GameWindow[3] = int(BottomGameWindow[1]) - 1
 
     if GameWindow[0] != 0 and GameWindow[2] != 0:
         Player[0] = int(((GameWindow[2] - GameWindow[0]) / 2) + GameWindow[0])

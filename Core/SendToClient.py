@@ -101,13 +101,12 @@ class SendToClient:
 
     def LeftClick(self, Position):
         ClientPosition = win32gui.ScreenToClient(self.hwnd, Position)
-        PositionToClick = win32api.MAKELONG(ClientPosition[0], ClientPosition[1])
+        PositionToClick = win32api.MAKELONG(ClientPosition[0], ClientPosition[1] + 23)
         # print('clicking at pos: ',
         #       ClientPosition[0], ClientPosition[1], self.hwnd)
-        # win32api.SetCursorPos(ClientPosition)
         win32api.PostMessage(self.hwnd, win32con.WM_MOUSEMOVE, 0, PositionToClick)
         win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, PositionToClick)
-        win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, PositionToClick)
+        win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, 0, PositionToClick)
 
     def RightClick(self, Position):
         ClientPosition = win32gui.ScreenToClient(self.hwnd, Position)

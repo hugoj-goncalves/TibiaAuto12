@@ -27,13 +27,17 @@ class HealerFriend:
             return 0, 0
 
     def ScanHealerFriend(self, wait):
-        Target = self.ScanTarget(self.BattlePosition, "Tataruga")
+        Target = self.ScanTarget(self.BattlePosition, "Tartaruga")
         # print("Target: ", Target[0], " - ", Target[1])
         if Target[0] != 0 and Target[1] != 0:
             # SaveImage('images/Tests/TestMaior.png', Region=(Target[0] + 29, Target[1] - 4, Target[0] + 159, Target[1] + 13))
-            # SaveImage('images/Tests/Test.png', Region=(Target[0] + 29, Target[1] + 8, Target[0] + 30, Target[1] + 11))
             
             Target = [Target[0] + 29, Target[1] + 8]
+
+            # SaveImage('images/Tests/Test.png', Region=(Target[0], Target[1], Target[0] + 130, Target[1] + 3))
+            # SaveImage('images/Tests/Test2.png', Region=(Target[0], Target[1], Target[0] + 129, Target[1] + 3))
+            # SaveImage('images/Tests/Test3.png', Region=(Target[0], Target[1] - 1, Target[0] + 130, Target[1] + 2))
+
             Life = self.Scan.ScanStagesBattle(Target, 130)
             if Life is None:
                 Life = 0
