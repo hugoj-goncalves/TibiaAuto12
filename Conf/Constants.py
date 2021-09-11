@@ -161,6 +161,7 @@ Monsters = [
     "CorymVanguard",
     "Stonerefiner",
     "Larva",
+    "Scarab",
     "TrainerPirat"
 ]
 

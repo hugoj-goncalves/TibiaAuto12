@@ -30,7 +30,7 @@ from Modules.HealerFriend import HealerFriend
 # from Modules.PythonScripts import PythonScripts
 # from Modules.SaveConfig import SaveConfig
 # from Modules.SortLoot import SortLoot
-# from Modules.TimedSpells import TimedSpells
+from Modules.TimedSpells import TimedSpells
 
 
 SETTED_VARIABLES = False
@@ -352,7 +352,6 @@ def OpenSortLoot():
 
 
 def OpenTimedSpells():
-    print("TimedSpells In Development...")
-    # TimedSpells(root)
+    TimedSpells(ManaLocation, MOUSE_OPTION)
 
 # endregion
