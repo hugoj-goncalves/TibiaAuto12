@@ -276,7 +276,7 @@ def OpenAutoMana():
 
 
 def OpenAutoRing():
-    AutoRing(root, RingPositions, HealthLocation, MOUSE_OPTION, ItemsPath)
+    AutoRing(RingPositions, HealthLocation, MOUSE_OPTION, ItemsPath)
 
 
 def OpenAutoSeller():
@@ -285,7 +285,7 @@ def OpenAutoSeller():
 
 
 def OpenAutoSSA():
-    AutoSSA(root, AmuletPositions, HealthLocation, MOUSE_OPTION, ItemsPath)
+    AutoSSA(AmuletPositions, HealthLocation, MOUSE_OPTION, ItemsPath)
 
 
 def OpenCaveBot():
