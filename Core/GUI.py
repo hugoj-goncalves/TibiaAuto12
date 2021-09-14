@@ -66,6 +66,7 @@ class GUI:
 
     def loop(self):
         self.windowID.mainloop()
+        print('Mainloop ended: ', self.name)
 
     def Protocol(self, Function):
         return self.windowID.protocol("WM_DELETE_WINDOW", Function)
@@ -75,6 +76,7 @@ class GUI:
         self.windowID.update()
 
     def destroyWindow(self):
+        print('Destroy window called: ', self.name)
         self.windowID.destroy()
 
     def PositionOfWindow(self, value):

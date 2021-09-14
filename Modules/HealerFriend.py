@@ -27,7 +27,7 @@ class HealerFriend:
             return 0, 0
 
     def ScanHealerFriend(self, wait):
-        Target = self.ScanTarget(self.BattlePosition, "Tartaruga")
+        Target = self.ScanTarget(self.BattlePosition, "Tataruga")
         # print("Target: ", Target[0], " - ", Target[1])
         if Target[0] != 0 and Target[1] != 0:
             # SaveImage('images/Tests/TestMaior.png', Region=(Target[0] + 29, Target[1] - 4, Target[0] + 159, Target[1] + 13))
@@ -44,7 +44,7 @@ class HealerFriend:
 
             # print('Life: ', Life)
             if Life > 0:
-                if Life < 80:
+                if Life < 68:
                     print("Pressed ", self.HotkeyHealerFriend.get(), " To Heal Friend from: ", Life)
                     self.SendToClient.Press(self.HotkeyHealerFriend.get())
                     wait(1)

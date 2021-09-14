@@ -104,11 +104,10 @@ class root:
         self.root.addButton('General Options', OpenGeneralOptions, [213, 23], [134, 426])
 
         def Exit():
-            print("Exiting...")
+            print("Exiting from root...")
             allThreads = AllThreads()
             allThreads.PauseThreads()
-            allThreads.CleanupThreads()
-            self.root.destroyWindow()
+            allThreads.CleanupThreads(cb=lambda: self.root.After(1000, self.root.destroyWindow))
 
         self.root.addButton('Exit', Exit, [92, 23], [10, 498])
         self.root.Protocol(Exit)

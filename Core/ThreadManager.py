@@ -55,11 +55,23 @@ class AllThreads:
                 print('UnPausing: ', ActivatedThreads[i][0])
                 ActivatedThreads[i][0].PauseOff()
 
-    def CleanupThreads(self):
+    def CleanupThreads(self, cb):
         for i in range(len(ActivatedThreads)):
             print('Cleaning up: ', ActivatedThreads[i][0])
             ActivatedThreads[i][0].Cleanup()
 
+        def WaitAllThreadsToFinish():
+            global ActivatedThreads
+            for x in ActivatedThreads:
+                print('Waiting for: ', x)
+                x[0].join()
+            ActivatedThreads = []
+
+            if cb is not None:
+                cb()
+
+        waitThread = Thread(target=WaitAllThreadsToFinish, args=())
+        waitThread.start()
 
 class ThreadManager:
     def __init__(self, Name, Managed = False, Func = None):
@@ -140,6 +152,7 @@ class ThreadManager:
             self.RunningEvent = RunningEvent
             self.Running = True
             self.ExitEvent = Event()
+            self.Ended = False
             # print(self.Name, "Created")
 
         def run(self):
@@ -154,14 +167,17 @@ class ThreadManager:
                         # self.Queue.pop(-1)
                         break
 
+                    print(self.Name, ' starting... Managed: ', self.Managed)
                     if self.Managed and self.RunningEvent:
                         while self.Running:
                             run = self.RunningEvent.wait(3)
+                            # print(self.Name, ' running... ', run)
                             if run:
                                 self._target(SelectedThread, self.ExitEvent.wait)
                     else:
                         self._target(SelectedThread)
             finally:
+                self.Ended = True
                 print('Thread ended: ', self.Name)
 
         def PauseOn(self):
