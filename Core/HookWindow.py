@@ -139,10 +139,7 @@ def TakeImage(Region=None):
 '''
 
 
-def LocateImage(image, Region=None, Precision=0.8, New=False, Debug=False):
-    if New:
-        return LocateImageNew(image, Region, Precision)
-
+def LocateImage(image, Region=None, Precision=0.8, Debug=False):
     TakedImage = TakeImage(Region)
 
     img_rgb = np.array(TakedImage)
@@ -165,30 +162,22 @@ def LocateImage(image, Region=None, Precision=0.8, New=False, Debug=False):
         return Position[0], Position[1]
     return 0, 0
 
-def LocateImageNew(image, Region=None, Precision=0.8):
+def LocateImageAlphaChannel(image, Region=None, Precision=0.9, Debug=False):
     TakedImage = TakeImage(Region)
-    # TakedImage.save('images/Tests/' + image.replace("/", "-"))
+    if Debug:
+        TakedImage.save('images/Tests/' + image.replace("/", "-"))
 
     img_rgb = np.array(TakedImage, dtype='uint8')
     img_rgb_cv2 = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2RGBA)
 
     mask_result = findImgthres(img_rgb_cv2, image, mask=True, thres=Precision)
-    print(mask_result[1])
-    findImgthresDebugSuccess(mask_result, img_rgb_cv2, image)
+    if Debug:
+        print(mask_result[1])
+        findImgthresDebugSuccess(mask_result, img_rgb_cv2, image)
     matchLoc = mask_result[1]
     if matchLoc is not None and matchLoc.size > 0:
-        return matchLoc[0][0], matchLoc[0][1]
+        return matchLoc[0][1], matchLoc[0][0]
     return 0, 0
-
-    # img_rgb = np.array(TakedImage)
-    # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    # template = cv2.imread(image, 0)
-
-    # res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-    # min_val, LocatedPrecision, min_loc, Position = cv2.minMaxLoc(res)
-    # if LocatedPrecision > Precision:
-    #     return Position[0], Position[1]
-    # return 0, 0
 
 def findImgthres(img, template_path, mask=False, method=1, thres=.95):
     tem = cv2.imread(template_path, cv2.IMREAD_UNCHANGED)
@@ -231,7 +220,7 @@ def findImgthresDebugSuccess(result, img, templatePath):
 '''
 
 
-def LocateCenterImage(image, Region=None, Precision=0.8, LeftHandle=False):
+def LocateCenterImage(image, Region=None, Precision=0.8, LeftHandle=False, Debug=False):
     TakedImage = TakeImage(Region)
 
     img_rgb = np.array(TakedImage)
@@ -239,9 +228,21 @@ def LocateCenterImage(image, Region=None, Precision=0.8, LeftHandle=False):
     template = cv2.imread(image, 0)
 
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+
+    if Debug:
+        w, h = template.shape[::-1]
+        loc = np.where(res >= Precision)
+        for pt in zip(*loc[::-1]):
+            cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        print('debugging: ', image)
+        cv2.imshow('output test', img_rgb)
+        cv2.waitKey(0)
+
     min_val, LocatedPrecision, min_loc, Position = cv2.minMaxLoc(res)
     if LocatedPrecision > Precision:
         needleWidth, needleHeight = GetImageSize(image)
+        if Debug:
+            print('image size: ', needleWidth, needleHeight, ' position: ', Position)
         if needleWidth:
             if LeftHandle:
                 return Position[0], Position[1] + int(needleHeight / 2)

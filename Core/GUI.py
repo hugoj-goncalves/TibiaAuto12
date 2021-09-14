@@ -97,7 +97,7 @@ class GUI:
         buttonID.place(w=sizes[0], h=sizes[1], x=positions[0], y=positions[1])
         return buttonID
 
-    def addCheck(self, variable, position, selected, textOfButton="", image=None):
+    def addCheck(self, variable, position, selected, textOfButton="", image=None, cb=None):
         buttonID = tk.Checkbutton(self.windowID,
                                   bg=rgb((114, 0, 3)),
                                   activebackground=rgb((114, 0, 3)),
@@ -109,7 +109,8 @@ class GUI:
                                   cursor="hand2",
                                   onvalue=True,
                                   offvalue=False,
-                                  image=image)
+                                  image=image,
+                                  command=cb)
         buttonID.place(x=position[0], y=position[1])
         if selected:
             buttonID.select()

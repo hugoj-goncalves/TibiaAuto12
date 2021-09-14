@@ -3,7 +3,7 @@ from time import sleep, time
 
 from Conf.Hotkeys import Hotkey
 
-from Core.HookWindow import LocateCenterImage, LocateImageNew, TakeImage
+from Core.HookWindow import LocateCenterImage, TakeImage
 from Engine.CaveBot.Scanners import NumberOfTargets, ScanTarget, IsAttacking, NeedFollow, CheckWaypoint
 
 TargetNumber = 0

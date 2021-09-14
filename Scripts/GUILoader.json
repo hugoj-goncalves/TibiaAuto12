@@ -117,7 +117,8 @@
             "CapBelowThan": "150"
         },
         "FoodEaterLoader": {
-            "HotkeyFoodEater": "Shift + F12"
+            "HotkeyFoodEater": "Shift + F12",
+            "UseFoodFromContainers": true
         },
         "HealerFriendLoader": {
             "HotkeyHealerFriend": "F3"
