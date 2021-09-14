@@ -1,1 +1,4 @@
-python StartBot.py || exit(0)
+python StartBot.py
+IF %ERRORLEVEL% NEQ 0 ( 
+   exit 0
+)
